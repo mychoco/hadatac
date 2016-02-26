@@ -78,6 +78,14 @@ public class DataAcquisition extends Controller {
     	
     	return result;
     }
+    
+    public static Result download(String facets) {
+    	return null;
+    }
+    
+    public static Result postDownload(String facets) {
+    	return null;
+    }
 
     public static Result index(int page, int rows, String facets) {
     	ObjectMapper mapper = new ObjectMapper();

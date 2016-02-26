@@ -7,6 +7,8 @@ GET	    /hadatac/                                 org.hadatac.console.controller
 POST	/hadatac/                                 org.hadatac.console.controllers.Portal.postIndex()
 GET	    /hadatac/acquisitions                     org.hadatac.console.controllers.dataacquisition.DataAcquisition.index(start: Int ?= 1, rows: Int ?= 20, facets: String ?= "")
 POST	/hadatac/acquisitions                     org.hadatac.console.controllers.dataacquisition.DataAcquisition.postIndex(start: Int ?= 1, rows: Int ?= 20, facets: String ?= "")
+GET	    /hadatac/acquisitions/download            org.hadatac.console.controllers.dataacquisition.DataAcquisition.download(facets: String ?= "")
+POST	/hadatac/acquisitions/download            org.hadatac.console.controllers.dataacquisition.DataAcquisition.postDownload(facets: String ?= "")
 GET	    /hadatac/acquisitions/loadccsv		      org.hadatac.console.controllers.dataacquisition.LoadCCSV.loadCCSV(oper: String)
 POST	/hadatac/acquisitions/loadccsv		      org.hadatac.console.controllers.dataacquisition.LoadCCSV.postLoadCCSV(oper: String)
 POST	/hadatac/acquisitions/loadccsv/upload	  org.hadatac.console.controllers.dataacquisition.LoadCCSV.uploadFile
@@ -97,8 +99,8 @@ POST	/hadatac/datacollections/delete     	   org.hadatac.console.controllers.dat
 GET	    /hadatac/datacollections/access		       org.hadatac.console.controllers.datacollections.SetAccessPermission.index(dc_uri : String)
 POST	/hadatac/datacollections/access     	   org.hadatac.console.controllers.datacollections.SetAccessPermission.postIndex(dc_uri : String)
 POST	/hadatac/datacollections/access/form       org.hadatac.console.controllers.datacollections.SetAccessPermission.newPermission(dc_uri : String)
-GET	    /hadatac/datacollections/search	    	   org.hadatac.console.controllers.datacollections.SearchDataCollection.index(p: Int ?= 1, facets: String ?= "", facetAdd: String ?= "", facetDel: String ?= "")
-POST	/hadatac/datacollections/search			   org.hadatac.console.controllers.datacollections.SearchDataCollection.postIndex(p: Int ?= 1, facets: String ?= "", facetAdd: String ?= "", facetDel: String ?= "")
+GET	    /hadatac/datacollections/search	    	   org.hadatac.console.controllers.datacollections.SearchDataCollection.index(start: Int ?= 1, rows: Int ?= 20, facets: String ?= "")
+POST	/hadatac/datacollections/search			   org.hadatac.console.controllers.datacollections.SearchDataCollection.postIndex(start: Int ?= 1, rows: Int ?= 20, facets: String ?= "")
 
 # annotator
 GET	    /hadatac/annotator/		    	           org.hadatac.console.controllers.annotator.Annotator.selectDeployment

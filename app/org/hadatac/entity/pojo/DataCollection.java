@@ -23,7 +23,9 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
+import org.hadatac.console.models.FacetHandler;
 import org.hadatac.data.loader.util.Sparql;
+import org.hadatac.data.model.AcquisitionQueryResult;
 import org.hadatac.utils.State;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -485,6 +487,18 @@ public class DataCollection {
 		}
 		
 		return list;
+	}
+	
+	public static AcquisitionQueryResult find(int page, int qtd, List<String> permissions, FacetHandler handler) {
+		AcquisitionQueryResult result = new AcquisitionQueryResult();
+		
+		SolrClient solr = new HttpSolrClient(Play.application().configuration().getString("hadatac.solr.data") + "/measurement");
+		SolrQuery query = new SolrQuery();
+		String permission_query = "";
+		String facet_query = "";
+		String q;
+		
+		return null;
 	}
 	
 	public static List<DataCollection> find(String ownerUri) {
