@@ -80,6 +80,10 @@ public class User extends AppModel implements Subject {
 
 	public List<UserPermission> permissions;
 	
+	public User() {
+		roles = new ArrayList<SecurityRole>();
+	}
+	
 	public String getLastLogin() {
 		DateTimeFormatter formatter = ISODateTimeFormat.dateTime();
 		return formatter.withZone(DateTimeZone.UTC).print(this.lastLogin_j);
@@ -269,11 +273,30 @@ public class User extends AppModel implements Subject {
 		user.save();
 		return user;
 	}
+	
+	public static boolean existsSolr() {
+		SolrClient solrClient = new HttpSolrClient(Play.application().configuration().getString("hadatac.solr.users") + "/users");
+    	SolrQuery solrQuery = new SolrQuery("*:*");
+    	
+    	try {
+			QueryResponse queryResponse = solrClient.query(solrQuery);
+			solrClient.close();
+			SolrDocumentList list = queryResponse.getResults();
+			if (list.size() > 0) {
+				return true;
+			}
+		} catch (Exception e) {
+			System.out.println("[ERROR] User.existsSolr - Exception message: " + e.getMessage());
+		}
+    	
+    	return false;
+	}
 
 	public static User create(final AuthUser authUser) {
 		final User user = new User();
-		user.roles = Collections.singletonList(SecurityRole
-				.findByRoleNameSolr(org.hadatac.console.controllers.AuthApplication.USER_ROLE));
+		
+		user.roles.add(SecurityRole
+				.findByRoleNameSolr(org.hadatac.console.controllers.AuthApplication.DATA_OWNER_ROLE));
 		user.permissions = new ArrayList<UserPermission>();
 		// user.permissions.add(UserPermission.findByValue("printers.edit"));
 		user.active = true;
@@ -311,10 +334,23 @@ public class User extends AppModel implements Subject {
 		}
 		
 		user.id_s = UUID.randomUUID().toString();
+		
+		if (User.existsSolr() == false) {
+			user.roles.add(SecurityRole
+					.findByRoleNameSolr(org.hadatac.console.controllers.AuthApplication.DATA_MANAGER_ROLE));
+			user.emailValidated = true;
+		}
 
 		user.save();
 		// user.saveManyToManyAssociations("roles");
 		// user.saveManyToManyAssociations("permissions");
+		org.hadatac.entity.pojo.User userTs =  new org.hadatac.entity.pojo.User();
+		userTs.setName(user.name);
+		userTs.setEmail(user.email);
+		userTs.setUri("http://localhost/users#admin");
+		userTs.setAdministrator(true);
+		userTs.save();
+		
 		return user;
 	}
 	
@@ -470,7 +506,8 @@ public class User extends AppModel implements Subject {
 		user.name = doc.getFieldValue("name").toString();
 		user.firstName = doc.getFieldValue("first_name").toString();
 		user.lastName = doc.getFieldValue("last_name").toString();
-		user.setLastLogin(doc.getFieldValue("last_login").toString());
+		DateTime date = new DateTime((Date)doc.getFieldValue("last_login"));
+		user.setLastLogin(date.withZone(DateTimeZone.UTC).toString("EEE MMM dd HH:mm:ss zzz yyyy"));
 		user.active = Boolean.parseBoolean(doc.getFieldValue("active").toString());
 		user.emailValidated = Boolean.parseBoolean(doc.getFieldValue("email_validated").toString());
 		
