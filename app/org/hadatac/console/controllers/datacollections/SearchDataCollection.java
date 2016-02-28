@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.hadatac.console.models.FacetHandler;
-import org.hadatac.console.views.html.datacollections.datacollection_browser;
+import org.hadatac.console.views.html.dataacquisition.dataacquisition_browser;
 import org.hadatac.data.model.AcquisitionQueryResult;
 import org.hadatac.entity.pojo.Measurement;
 
@@ -31,7 +31,7 @@ public class SearchDataCollection extends Controller {
     	
     	AcquisitionQueryResult results = Measurement.find(page, rows, permissions, handler);
     	
-    	return ok(datacollection_browser.render(results, results.toJSON(), handler.toJSON()));
+    	return ok(dataacquisition_browser.render(results, results.toJSON(), handler.toJSON()));
 	}
 	
 	public static Result postIndex(int page, int rows, String facets) {
